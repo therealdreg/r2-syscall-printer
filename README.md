@@ -6,9 +6,11 @@ The current amd64 call convention in r2 supported is User-level call convention:
 
 I created this r2pipe script to support x86 & amd64 kernel interface call convention: %rdi, %rsi, %rdx, **%r10, %r8, %r9**
 
-The official r2-support for this call convention is comming, check my pr and pancake pr: https://github.com/radareorg/radare2/pull/17954 https://github.com/radareorg/radare2/pull/17960
-
 ![alt text](r2-syscall-printer.png)
+
+The official r2-support for amd64 kernel interface call convention is comming, check my pr and pancake pr: 
+* https://github.com/radareorg/radare2/pull/17954 
+* https://github.com/radareorg/radare2/pull/17960
 
 ## Usage:
 
