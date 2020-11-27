@@ -1,6 +1,6 @@
 # r2-syscall-printer
 
-**WARNING: this is a POC, and the code is pure CRAP
+**WARNING: this is a POC, and the code is pure CRAP**
 
 The current amd64 call convention in r2 supported is User-level call convention: %rdi, %rsi, %rdx, **%rcx, %r8, %r9**
 
