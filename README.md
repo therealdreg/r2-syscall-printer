@@ -28,6 +28,12 @@ Display extra info use /extra:
 #!pipe python3 r2-syscall-printer.py /32 /extra
 ```
 
+# Credits
+
+Code based & adapted from GEF by hugsy - GDB Enhanced Features for exploit devs & reversers
+
+http://gef.rtfd.io/ - https://github.com/hugsy/gef - https://github.com/hugsy/gef-extras
+
 # TODO
 
 * Improve the code, more pythonic please
