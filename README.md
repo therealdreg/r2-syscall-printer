@@ -30,7 +30,7 @@ Display extra info use /extra:
 
 # Credits
 
-Code based & adapted from GEF by hugsy - GDB Enhanced Features for exploit devs & reversers
+Code based & adapted from GEF-extras (syscall-args) by hugsy - GDB Enhanced Features for exploit devs & reversers
 * http://gef.rtfd.io/
 * https://github.com/hugsy/gef
 * https://github.com/hugsy/gef-extras
