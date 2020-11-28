@@ -45,6 +45,7 @@ Code based & adapted from GEF-extras (syscall-args) by hugsy - GDB Enhanced Feat
 
 * Improve the code, more pythonic please
 * Add support to specify a syscall_index value, something like: #!pipe python3 r2-syscall-printer.py /32 syscall_idex=3
+* Auto detect process arch32/64 for default display
 
 # Contributors
 
