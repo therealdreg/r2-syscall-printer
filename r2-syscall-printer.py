@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # r2-syscall-printer v0.5b
 # MIT License - Copyright 2020
 # David Reguera Garcia aka Dreg - dreg@fr33project.org
