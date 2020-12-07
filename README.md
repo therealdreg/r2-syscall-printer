@@ -34,9 +34,58 @@ To display extra info (like in the screenshot image) use /extra:
 #!pipe python3 r2-syscall-printer.py /32 /extra
 ```
 
+## Use as standalone tool
+
+Use /sysinfoX for hexadecimal syscall ID and /sysinfoD for decimal syscall ID, examples:
+
+Getting 32bits-table-info about syscall 0xAB and 3 (decimal):
+```
+dreg@fr33project:~# python3 /root/r2-syscall-printer/r2-syscall-printer.py /32 /sysinfoXAB /sysinfoD3 /exit
+arch: 32 bits
+syscall: 171 (decimal)
+Entry(name='getresgid', params=[Param(reg='$ebx', param='gid_t *rgidp'), Param(reg='$ecx', param='gid_t *egidp'), Param(reg='$edx', param='gid_t *sgidp')])
+syscall: 3 (decimal)
+Entry(name='read', params=[Param(reg='$ebx', param='unsigned int fd'), Param(reg='$ecx', param='char *buf'), Param(reg='$edx', param='size_t count')])
+```
+
+Getting 64bits-table-info about syscall 0xFF and 13 (decimal):
+```
+dreg@fr33project:~# python3 /root/r2-syscall-printer/r2-syscall-printer.py /sysinfoXFF /sysinfoD13 /exit
+arch: 64 bits
+syscall: 255 (decimal)
+Entry(name='inotify_rm_watch', params=[Param(reg='$rdi', param='int fd'), Param(reg='$rsi', param='__s32 wd')])
+syscall: 13 (decimal)
+Entry(name='rt_sigaction', params=[Param(reg='$rdi', param='int sig'), Param(reg='$rsi', param='const struct sigaction *act'), Param(reg='$rdx', param='struct sigaction *oact'), Param(reg='$r10', param='size_t sigsetsize')])
+```
+
+Printing full 32bits-table-info syscall info:
+```
+dreg@fr33project:~# python3 /root/r2-syscall-printer/r2-syscall-printer.py /32 /printable /exit
+arch: 32 bits
+{   0: Entry(name='restart_syscall', params=[]),
+    1: Entry(name='exit', params=[Param(reg='$ebx', param='int error_code')]),
+    2: Entry(name='fork', params=[]),
+    3: Entry(name='read', params=[Param(reg='$ebx', param='unsigned int fd'), Param(reg='$ecx', param='char *buf'), Param(reg='$edx', param='size_t count')]),
+    4: Entry(name='write', params=[Param(reg='$ebx', param='unsigned int fd'), Param(reg='$ecx', param='const char *buf'), Param(reg='$edx', param='size_t count')]),
+    ...
+```
+
+Printing full 64bits-table-info syscall info:
+```
+dreg@fr33project:~# python3 /root/r2-syscall-printer/r2-syscall-printer.py /printable /exit
+arch: 64 bits
+{   0: Entry(name='read', params=[Param(reg='$rdi', param='unsigned int fd'), Param(reg='$rsi', param='char *buf'), Param(reg='$rdx', param='size_t count')]),
+    1: Entry(name='write', params=[Param(reg='$rdi', param='unsigned int fd'), Param(reg='$rsi', param='const char *buf'), Param(reg='$rdx', param='size_t count')]),
+    2: Entry(name='open', params=[Param(reg='$rdi', param='const char *filename'), Param(reg='$rsi', param='int flags'), Param(reg='$rdx', param='umode_t mode')]),
+    3: Entry(name='close', params=[Param(reg='$rdi', param='unsigned int fd')]),
+    4: Entry(name='stat', params=[Param(reg='$rdi', param='const char *filename'), Param(reg='$rsi', param='struct __old_kernel_stat *statbuf')]),
+    5: Entry(name='fstat', params=[Param(reg='$rdi', param='unsigned int fd'), Param(reg='$rsi', param='struct __old_kernel_stat *statbuf')]),
+    ...
+```
+
 # Credits
 
-Code based & adapted from GEF-extras (syscall-args) by hugsy - GDB Enhanced Features for exploit devs & reversers
+Tables from GEF-extras (syscall-args) by hugsy - GDB Enhanced Features for exploit devs & reversers
 * http://gef.rtfd.io/
 * https://github.com/hugsy/gef
 * https://github.com/hugsy/gef-extras
@@ -44,7 +93,6 @@ Code based & adapted from GEF-extras (syscall-args) by hugsy - GDB Enhanced Feat
 # TODO
 
 * Improve the code, more pythonic please
-* Add support to specify a syscall_index value, something like: #!pipe python3 r2-syscall-printer.py /32 syscall_idex=3
 * Auto detect process arch32/64 for default display
 
 # Contributors
