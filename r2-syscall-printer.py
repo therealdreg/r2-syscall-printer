@@ -21,7 +21,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 # -
-# Code based & adapted from:
+# Tables from:
 # GEF-extras (syscall-args) by hugsy - GDB Enhanced Features for exploit devs & reversers
 # http://gef.rtfd.io/ - https://github.com/hugsy/gef - https://github.com/hugsy/gef-extras
 # -
@@ -33,8 +33,8 @@
 # -
 # WARNING: this is a POC, and the code is pure CRAP
 
-import r2pipe
 import sys
+import pprint
 from collections import namedtuple
 
 Entry = namedtuple('Entry', 'name params')
@@ -670,15 +670,69 @@ syscall_table64[0x136] = Entry('process_vm_readv', [Param('$rdi', 'pid_t pid'), 
 syscall_table64[0x137] = Entry('process_vm_writev', [Param('$rdi', 'pid_t pid'), Param('$rsi', 'const struct iovec *lvec'), Param('$rdx', 'unsigned long liovcnt'), Param('$r10', 'const struct iovec *rvec'), Param('$r8', 'unsigned long riovcnt'), Param('$r9', 'unsigned long flags')])
 syscall_table64[0x138] = Entry('kcmp', [Param('$rdi', 'pid_t pid1'), Param('$rsi', 'pid_t pid2'), Param('$rdx', 'int type'), Param('$r10', 'unsigned long idx1'), Param('$r8', 'unsigned long idx2')])
 
+
+r2 = None
+is_pannel = False
+
+
+def ImportR2():
+    global r2
+    if r2 is None:
+        try:
+            import r2pipe
+            r2 = r2pipe.open()
+        except Exception:
+            pass
+
+def OutStr(strin):
+    global is_pannel, r2
+    if r2 is None:
+        ImportR2()
+    if is_pannel and r2:
+        cmd = "?e " + str(strin)
+        #print(cmd)
+        r2.cmd(cmd)
+    else:
+        print(strin)
 is_arch64 = True
+def ShowCurrentArch():
+    global is_arch64
+    if is_arch64:
+        OutStr("arch: 64 bits")
+    else:
+        OutStr("arch: 32 bits")
 syscall_table = syscall_table64
 show_extra = False
+if any("/pannel" in s for s in sys.argv):
+    is_pannel = True
 if any("/extra" in s for s in sys.argv):
     show_extra = True
 if any("/32" in s for s in sys.argv):
     is_arch64 = False
     syscall_table = syscall_table32
-r2 = r2pipe.open()
+if any("/printable" in s for s in sys.argv):
+    ShowCurrentArch()
+    formatted = pprint.pformat(syscall_table, indent=4)
+    for line in formatted.splitlines():
+        OutStr(line)
+if any("/sysinfoX" in s for s in sys.argv) or any("/sysinfoD" in s for s in sys.argv):
+    ShowCurrentArch()
+    for s in sys.argv:
+        if "/sysinfo" in s:
+            if s.split('o')[1][0] == 'D':
+                id = int(s.split('D')[1])
+            elif s.split('o')[1][0] == 'X':
+                id = int(s.split('X')[1], 16)
+            OutStr("syscall: " + str(id) + " (decimal)")
+            OutStr(syscall_table[id])
+if any("/exit" in s for s in sys.argv):
+    exit()
+
+ImportR2()
+if r2 is None:
+    print("cant import r2pipe")
+    exit()
+
 try:
     if is_arch64:
         raxv = r2.cmd("dr rax")
@@ -689,7 +743,7 @@ try:
     syscall_index_rax = int(raxv, 16);
     syscall_index_orax = int(oraxv, 16);
 except:
-    print("\n\nAn exception occurred, are you using /32 param for 32 processes? Ex: #!pipe python3 r2-syscall-printer.py /32\n\n")
+    OutStr("\n\nAn exception occurred, are you using /32 param for 32 processes? Ex: #!pipe python3 r2-syscall-printer.py /32\n\n")
 if syscall_index_rax in syscall_table:
     syscall_index = syscall_index_rax
 else:
@@ -697,14 +751,14 @@ else:
 if syscall_index in syscall_table:
     syscall_entry = syscall_table[syscall_index]
     syscall_name = syscall_entry.name + "() - " + hex(syscall_index) + " - " + str(syscall_index)
-    print(syscall_name)
+    OutStr(syscall_name)
     parameters = [s.param for s in syscall_entry.params]
     registers = [s.reg for s in syscall_entry.params]
     extra = ""
     for reg, param in zip(registers, parameters):
         reg = reg.replace("$", "")
         val = int(r2.cmd("dr?" + reg), 16);
-        print(reg, "-", param, "-", hex(val), "-", val)
+        OutStr(str(reg) + " - " + param + " - " + hex(val) + " - " + str(val))
         if show_extra and "char" in param and param.count("*") > 1 and val is not 0:
             if is_arch64:
                 extra += reg + " - " + hex(val) + " :\n" + r2.cmd("pxrQ @ " + reg)
@@ -713,7 +767,7 @@ if syscall_index in syscall_table:
         elif show_extra and "char" in param and "*" in param and val is not 0:
             extra += reg + " - " + hex(val) + " : " + r2.cmd("ps @ " + reg)
     if show_extra:
-        print("-\n" + extra)
+        OutStr("-\n" + extra)
 
 else:
-	print("There is no system call for {:#x}".format(syscall_index))
+	OutStr("There is no system call for {:#x}".format(syscall_index))
