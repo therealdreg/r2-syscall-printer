@@ -38,11 +38,11 @@ To display extra info (like in the screenshot image) use /extra:
 
 ## Use as standalone tool
 
-* /sysinfoX for hexadecimal syscall ID 
-* /sysinfoD for decimal syscall ID
-* /printable prints full syscall table
-* /exit show info & exit
-* /32 put the current sys_call_table mode for 32 bit (default 64)
+* /sysinfoX: for hexadecimal syscall ID 
+* /sysinfoD: for decimal syscall ID
+* /printable: prints full syscall table
+* /exit: show info & exit
+* /32: put the current sys_call_table mode for 32 bit (default 64)
 
 Getting 32bits-table-info about syscall 0xAB and 3 (decimal):
 ```
