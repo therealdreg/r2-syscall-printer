@@ -714,7 +714,11 @@ if any("/printable" in s for s in sys.argv):
     ShowCurrentArch()
     formatted = pprint.pformat(syscall_table, indent=4)
     for line in formatted.splitlines():
-        OutStr(line)
+        line = line.replace("{"," ")
+        line = line.replace("}"," ")
+        id = line.split(":")[0].strip()
+        id = hex(int(id))
+        OutStr(id + line + "\n")
 if any("/sysinfoX" in s for s in sys.argv) or any("/sysinfoD" in s for s in sys.argv):
     ShowCurrentArch()
     for s in sys.argv:
