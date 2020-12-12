@@ -723,7 +723,7 @@ if any("/sysinfoX" in s for s in sys.argv) or any("/sysinfoD" in s for s in sys.
                 id = int(s.split('D')[1])
             elif s.split('o')[1][0] == 'X':
                 id = int(s.split('X')[1], 16)
-            OutStr("syscall: " + str(id) + " (decimal)")
+            OutStr("syscall: " + str(id) + " - " + hex(id))
             OutStr(syscall_table[id])
 if any("/exit" in s for s in sys.argv):
     exit()
