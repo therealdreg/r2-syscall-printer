@@ -698,9 +698,9 @@ is_arch64 = True
 def ShowCurrentArch():
     global is_arch64
     if is_arch64:
-        OutStr("arch: 64 bits")
+        OutStr("arch: 64 bits:")
     else:
-        OutStr("arch: 32 bits")
+        OutStr("arch: 32 bits:")
 syscall_table = syscall_table64
 show_extra = False
 if any("/pannel" in s for s in sys.argv):
@@ -728,7 +728,7 @@ if any("/sysinfoX" in s for s in sys.argv) or any("/sysinfoD" in s for s in sys.
             elif s.split('o')[1][0] == 'X':
                 id = int(s.split('X')[1], 16)
             OutStr("syscall: " + str(id) + " - " + hex(id))
-            OutStr(syscall_table[id])
+            OutStr(str(syscall_table[id]) + "\n")
 if any("/exit" in s for s in sys.argv):
     exit()
 
