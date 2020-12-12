@@ -99,7 +99,7 @@ Tables from GEF-extras (syscall-args) - GDB Enhanced Features for exploit devs &
 # TODO
 
 * Improve the code, more pythonic please
-* Auto detect process arch32/64 for default display
+* Auto detect process arch32/64 for default display in r2
 
 # Contributors
 
