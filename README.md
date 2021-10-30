@@ -1,3 +1,5 @@
+Please, consider make a donation: https://github.com/sponsors/therealdreg
+
 # r2-syscall-printer
 
 **WARNING: this is a POC, and the code is pure CRAP**
